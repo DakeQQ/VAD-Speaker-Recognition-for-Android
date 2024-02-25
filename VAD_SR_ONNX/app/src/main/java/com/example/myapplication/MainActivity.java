@@ -555,7 +555,7 @@ public class MainActivity extends AppCompatActivity {
             if (Objects.equals(text, "")) {
                 addHistory(ChatMessage.TYPE_SYSTEM, rename_id);
             } else {
-                text = text.replaceAll("[-`~!@#$%^&*()_+=|{}':;\"\\[\\].<>/?·！￥…（）—《》【】‘；：”“’。，、？ ]", ",");
+                text = text.replaceAll("[-`~!@#$%^&*()_+=|{}':;\"\\[\\].<>/?·！￥…（）—《》【】‘；：”“’。，、？]", ",");
                 String[] temp_array = text.split(",");
                 for (int i = 0; i < temp_array.length; i++) {
                     temp_array[i] = temp_array[i].trim();
