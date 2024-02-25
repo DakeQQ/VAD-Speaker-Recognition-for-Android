@@ -1,0 +1,8 @@
+<resources>
+    <string name="start">开始分析\nStart Analysis</string>
+    <string name="clear">清除 Clear</string>
+    <string name="stop">停止分析\nStop Analyzing</string>
+    <string name="restart">重启 Restart</string>
+    <string name="rename">命名ID\nRename ID</string>
+    <string name="format_n0">命名格式 Format:\n0.大可 or 0/John…</string>
+</resources>
