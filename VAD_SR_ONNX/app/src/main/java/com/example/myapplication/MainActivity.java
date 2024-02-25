@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
                 float[] recordedData = multiMicRecorder.Read_PCM_Data();
                 runOnUiThread(() -> {
                     long start_time = System.currentTimeMillis();
-                    float[] result = Run_VAD_SC(FRAME_BUFFER_SIZE_MONO_16k, recordedData, temp_stop);
-//                    System.out.println("SC_Time_Cost: " + (System.currentTimeMillis() - start_time) + "ms");
+                    float[] result = Run_VAD_SR(FRAME_BUFFER_SIZE_MONO_16k, recordedData, temp_stop);
+                    System.out.println("SC_Time_Cost: " + (System.currentTimeMillis() - start_time) + "ms");
                     int index_i = 0;
                     for (int i = 0; i < amount_of_mic_channel; i++) {
                         if (result[index_i] != -999.f) {
@@ -708,5 +708,5 @@ public class MainActivity extends AppCompatActivity {
     private native boolean Load_Models_0(AssetManager assetManager, boolean FP16, boolean USE_GPU, boolean USE_NNAPI, boolean USE_XNNPACK, boolean USE_QNN, boolean USE_DSP_NPU);
     private native boolean Load_Models_1(AssetManager assetManager, boolean FP16, boolean USE_GPU, boolean USE_NNAPI, boolean USE_XNNPACK, boolean USE_QNN, boolean USE_DSP_NPU);
     private native boolean Pre_Process(float[] neg_mean_vad, float[] inv_std_vad);
-    private static native float[] Run_VAD_SC(int record_size_16k, float[] audio, int stop_asr);
+    private static native float[] Run_VAD_SR(int record_size_16k, float[] audio, int stop_asr);
 }
