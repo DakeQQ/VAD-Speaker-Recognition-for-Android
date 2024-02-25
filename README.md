@@ -13,7 +13,7 @@
 11. The time cost of speaker recognition inference is about 25ms. VAD takes about 2ms.
 # VAD-说话人识别-安卓
 1. 在安卓设备上展示多说话人识别。
-2. 演示模型已上传到驱动器：https://drive.google.com/drive/folders/1p_qIVEO5ZPhHAsyxaJsHk4Ykf7cMm5PN?usp=sharing
+2. 演示模型已上传到云端硬盘：https://drive.google.com/drive/folders/1p_qIVEO5ZPhHAsyxaJsHk4Ykf7cMm5PN?usp=sharing
 3. 下载后，将模型放入assets文件夹。
 4. 记得解压存储在libs/arm64-v8a文件夹中的*.so zip文件。
 5. 演示模型，命名为'FSMN-VAD'和'ERes2Net'，是从ModelScope转换来的，并经过代码优化以实现极致的执行速度。
