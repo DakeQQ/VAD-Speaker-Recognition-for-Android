@@ -25,3 +25,4 @@
 11. 您可以按照特定格式重命名ID。例如：0.John 或 1:John 或 John/Handsome_John...使用标记或空格来分隔之前的ID和新名称。
 12. 说话人识别推理的时间消耗约为25ms。VAD大约需要2ms。
 # 演示结果 Demo Results
+![Demo Animation](https://github.com/DakeQQ/VAD-Speaker-Recognition-for-Android/blob/main/vad_sr.gif?raw=true)
