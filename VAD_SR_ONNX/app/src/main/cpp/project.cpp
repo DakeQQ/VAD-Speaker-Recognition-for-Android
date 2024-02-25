@@ -663,7 +663,7 @@ Java_com_example_myapplication_MainActivity_Pre_1Process(JNIEnv *env, jobject cl
 
 extern "C"
 JNIEXPORT jfloatArray JNICALL
-Java_com_example_myapplication_MainActivity_Run_1VAD_1SC(JNIEnv *env, jclass clazz,
+Java_com_example_myapplication_MainActivity_Run_1VAD_1SR(JNIEnv *env, jclass clazz,
                                                          jint audio_length,
                                                          jfloatArray audio,
                                                          jint jstop_sc) {
