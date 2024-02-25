@@ -180,12 +180,12 @@ public class MainActivity extends AppCompatActivity {
                                 float[] temp_array = new float[model_hidden_size_Res2Net];
                                 System.arraycopy(result,0, temp_array, index_i,index_i + model_hidden_size_Res2Net);
                                 int speaker = Compare_Similarity(temp_array);
-                                runOnUiThread(() -> addHistory(ChatMessage.TYPE_USER,"正在分析 Analyzing: " + continue_active[finalI] + "\n来自 From_Mic: " + mic_owners[finalI]));
+                                runOnUiThread(() -> addHistory(ChatMessage.TYPE_USER,"说话中 Now talking: " + continue_active[finalI] + "\n来自 From_Mic: " + mic_owners[finalI]));
                                 speaker_history.get(i).add(speaker);
                                 feature_history.get(i).add(temp_array);
                             } else {
                                 int speaker = Compare_Similarity(result);
-                                runOnUiThread(() -> addHistory(ChatMessage.TYPE_USER,"正在分析 Analyzing: " + continue_active[finalI] + "\n来自 From_Mic: " + mic_owners[finalI]));
+                                runOnUiThread(() -> addHistory(ChatMessage.TYPE_USER,"说话中 Now talking: " + continue_active[finalI] + "\n来自 From_Mic: " + mic_owners[finalI]));
                                 speaker_history.get(i).add(speaker);
                                 feature_history.get(i).add(result);
                             }
