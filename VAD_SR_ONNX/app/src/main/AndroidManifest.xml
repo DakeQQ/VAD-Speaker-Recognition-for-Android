@@ -12,7 +12,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/psyduck"
-        android:label="VAD+ASR+SC"
+        android:label="VAD+SR"
         android:roundIcon="@drawable/psyduck"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
