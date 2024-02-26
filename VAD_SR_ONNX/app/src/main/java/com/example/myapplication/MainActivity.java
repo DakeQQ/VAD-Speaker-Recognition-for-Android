@@ -555,28 +555,34 @@ public class MainActivity extends AppCompatActivity {
             if (Objects.equals(text, "")) {
                 addHistory(ChatMessage.TYPE_SYSTEM, rename_id);
             } else {
-                text = text.replaceAll("[-`~!@#$%^&*()_+=|{}':;\"\\[\\].<>/?·！￥…（）—《》【】‘；：”“’。，、？]", ",");
-                String[] temp_array = text.split(",");
-                for (int i = 0; i < temp_array.length; i++) {
-                    temp_array[i] = temp_array[i].trim();
+                text = text.replaceAll("[-`~!@#$%^&*()_+=|{}':;\"\\[\\].<>/?·！￥…（）—《》【】‘；：”“’。，、？ ]", ",");
+                String[] name_array = text.split(",");
+                {
+                    List<String> temp_list = new ArrayList<>();
+                    for (String s : name_array) {
+                        if (!Objects.equals(s, "")) {
+                            temp_list.add(s);
+                        }
+                    }
+                    name_array = temp_list.toArray(new String[(int) (temp_list.size())]);
                 }
                 try {
                     for (int i = 0; i < speaker_name.length; i++) {
-                        if (Objects.equals(speaker_name[i], temp_array[0])) {
-                            speaker_name[i] = temp_array[1];
-                            addHistory(ChatMessage.TYPE_SYSTEM, "ID " + temp_array[0] + " 已重命名为" + "'" + temp_array[1] + "'" +"\nThe ID " + temp_array[0] + " has been renamed to " + "'" + temp_array[1] + "'");
+                        if (Objects.equals(speaker_name[i], name_array[0])) {
+                            speaker_name[i] = name_array[1];
+                            addHistory(ChatMessage.TYPE_SYSTEM, "ID " + name_array[0] + " 已重命名为" + "'" + name_array[1] + "'" +"\nThe ID " + name_array[0] + " has been renamed to " + "'" + name_array[1] + "'");
                             saveToFile(speaker_name,cache_path + file_name_speakers_names);
                             return;
                         }
                     }
-                    if (Character.isDigit(temp_array[0].charAt(0))) {
-                        int index = Integer.parseInt(temp_array[0]);
+                    if (Character.isDigit(name_array[0].charAt(0))) {
+                        int index = Integer.parseInt(name_array[0]);
                         if ((index < score_pre_calculate_Speaker.length) && (index > -1)) {
                             int j = 1;
-                            for (int i = index; i < temp_array.length + index - 1; i++) {
+                            for (int i = index; i < name_array.length + index - 1; i++) {
                                 if (i < score_pre_calculate_Speaker.length) {
-                                    speaker_name[i] = temp_array[j];
-                                    addHistory(ChatMessage.TYPE_SYSTEM, "ID " + i + " 已重命名为" + "'" + temp_array[j] + "'" +"\nThe ID " + i + " has been renamed to " + "'" + temp_array[j] + "'");
+                                    speaker_name[i] = name_array[j];
+                                    addHistory(ChatMessage.TYPE_SYSTEM, "ID " + i + " 已重命名为" + "'" + name_array[j] + "'" +"\nThe ID " + i + " has been renamed to " + "'" + name_array[j] + "'");
                                     j += 1;
                                 } else {
                                     break;
