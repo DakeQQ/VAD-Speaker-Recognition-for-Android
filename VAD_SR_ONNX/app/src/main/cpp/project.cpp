@@ -666,7 +666,7 @@ JNIEXPORT jfloatArray JNICALL
 Java_com_example_myapplication_MainActivity_Run_1VAD_1SR(JNIEnv *env, jclass clazz,
                                                          jint audio_length,
                                                          jfloatArray audio,
-                                                         jint jstop_sc) {
+                                                         jint jstop_sr) {
     std::vector<std::vector<float>> resample_signal(amount_of_mic_channel,std::vector<float> (audio_length, 0.f));
     {
         jfloat* waves = env->GetFloatArrayElements(audio, nullptr);
@@ -689,7 +689,7 @@ Java_com_example_myapplication_MainActivity_Run_1VAD_1SR(JNIEnv *env, jclass cla
                       features_for_speaker_confirm[i].begin());
             std::copy(save_features[i].begin(),save_features[i].end(),
                       features_for_speaker_confirm[i].end() - refresh_size);
-            if (i != jstop_sc) {
+            if (i != jstop_sr) {
                 std::move(features_for_vad[i].begin() + refresh_size,features_for_vad[i].end(),
                           features_for_vad[i].begin());
                 std::move(save_features[i].begin(), save_features[i].end(),
@@ -709,7 +709,7 @@ Java_com_example_myapplication_MainActivity_Run_1VAD_1SR(JNIEnv *env, jclass cla
         }
     }
     for (int i = 0; i < amount_of_mic_channel; i++) {
-        if (i != jstop_sc) {
+        if (i != jstop_sr) {
             std::move(history_signal[i].begin() + audio_length, history_signal[i].begin() + number_of_history_audio * audio_length, history_signal[i].begin());
             std::move(resample_signal[i].begin(), resample_signal[i].end(), history_signal[i].begin() + (number_of_history_audio - 1) * audio_length);
             std::destroy(resample_signal[i].begin(), resample_signal[i].end());
@@ -723,7 +723,7 @@ Java_com_example_myapplication_MainActivity_Run_1VAD_1SR(JNIEnv *env, jclass cla
         int hop_size = (number_of_history_audio - 1) * audio_length / (number_of_frame_state - 1);
         float inv_reference_factor = inv_reference_air_pressure_square / static_cast<float> (audio_length);
         for (int k = 0; k < amount_of_mic_channel; k++) {
-            if (k != jstop_sc) {
+            if (k != jstop_sr) {
                 void* output_tensors_buffer_0;
                 void* output_tensors_buffer_1;
                 OrtMemoryInfo *memory_info;
@@ -780,25 +780,25 @@ Java_com_example_myapplication_MainActivity_Run_1VAD_1SR(JNIEnv *env, jclass cla
         }
     }
     for (int i = 0; i < amount_of_mic_channel; i++) {
-        if (i != jstop_sc) {
-            if (trigger_SC[i]) {
+        if (i != jstop_sr) {
+            if (trigger_SR[i]) {
                 if (frame_state[i] < number_of_history_audio) {  // It is a editable logic. Modify if you need to adjust the VAD de-activate sensitivity.
-                    trigger_SC[i] = false;
+                    trigger_SR[i] = false;
                 }
             } else {
                 if (frame_state[i] > 0) {  // '0' it is a editable value. Modify if you need to adjust the VAD activate sensitivity.
-                    trigger_SC[i] = true;
+                    trigger_SR[i] = true;
                 }
             }
         } else {
-            trigger_SC[i] = false;
+            trigger_SR[i] = false;
         }
     }
     std::vector<float> speaker_vectors(total_elements_in_pre_allocate, -999.f);
     {
         int index_k = 0;
         for (int k = 0; k < amount_of_mic_channel; k++) {
-            if (trigger_SC[k]) {
+            if (trigger_SR[k]) {
                 OrtMemoryInfo *memory_info;
                 ort_runtime_B->CreateCpuMemoryInfo(OrtArenaAllocator, OrtMemTypeDefault,
                                                    &memory_info);
