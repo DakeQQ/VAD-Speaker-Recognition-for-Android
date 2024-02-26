@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String file_name_speakers_frequency = "speaker_frequency.txt";
     @SuppressLint("SdCardPath")
     private static final String cache_path = "/data/user/0/com.example.myapplication/cache/";
-    private static final String sc_turn_on = "启动说话人识别 \nSpeaker Recognition Starting";
+    private static final String sr_turn_on = "启动说话人识别 \nSpeaker Recognition Starting";
     private static final String cleared = "已清除 Cleared";
     private static final String restart_success = "已重新启动 Restarted";
     private static final String restart_failed = "重新启动失败, 请退出此应用程序并手动重新启动。\nRestart Failed. Please exit this App and manually restart.";
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     static RecyclerView answerView;
     private static ChatAdapter chatAdapter;
     private static List<ChatMessage> messages;
-    private static SC_Thread sc_Thread;
+    private static SR_Thread sr_Thread;
     private static MultiMicRecorder multiMicRecorder;
 
     static {
@@ -151,17 +151,17 @@ public class MainActivity extends AppCompatActivity {
         Rename();
         startButton.setOnClickListener(v -> {
             if (recording) {
-                stop_SC();
+                stop_SR();
                 startButton.setText(R.string.start);
             } else {
-                start_SC();
+                start_SR();
                 startButton.setText(R.string.stop);
             }
         });
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        showToast(sc_turn_on, false);
+        showToast(sr_turn_on, false);
     }
-    private class SC_Thread extends Thread {
+    private class SR_Thread extends Thread {
         @Override
         public void run() {
             while (recording) {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     long start_time = System.currentTimeMillis();
                     float[] result = Run_VAD_SR(FRAME_BUFFER_SIZE_MONO_16k, recordedData, temp_stop);
-                    System.out.println("SC_Time_Cost: " + (System.currentTimeMillis() - start_time) + "ms");
+                    System.out.println("SR_Time_Cost: " + (System.currentTimeMillis() - start_time) + "ms");
                     int index_i = 0;
                     for (int i = 0; i < amount_of_mic_channel; i++) {
                         if (result[index_i] != -999.f) {
@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
-        private void stop_SC() {
+        private void stop_SR() {
             recording = false;
             multiMicRecorder.stopRecording();
             for (int k = 0; k < amount_of_mic_channel; k++) {
@@ -463,15 +463,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     @SuppressLint("SetTextI18n")
-    private void start_SC() {
+    private void start_SR() {
         recording = true;
         multiMicRecorder = new MultiMicRecorder();
         multiMicRecorder.startRecording();
-        sc_Thread = new SC_Thread();
-        sc_Thread.start();
+        sr_Thread = new SR_Thread();
+        sr_Thread.start();
     }
     @SuppressLint("SetTextI18n")
-    private void stop_SC() {sc_Thread.stop_SC();}
+    private void stop_SR() {sr_Thread.stop_SR();}
     @SuppressLint("NotifyDataSetChanged")
     private static void addHistory(int messageType, String result) {
         int lastMessageIndex = messages.size() - 1;
@@ -505,8 +505,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void Restart(){
         try {
-            stop_SC();
-            start_SC();
+            stop_SR();
+            start_SR();
             clearHistory();
             showToast(restart_success,false);
         } catch (Exception e) {
