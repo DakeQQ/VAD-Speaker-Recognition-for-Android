@@ -72,7 +72,7 @@ const float inv_16bit_factor = 1.f / (32768.f * 32768.f);
 const float inv_reference_air_pressure_square = 2500000000.f;  //  1 / (0.00002 * 0.00002)
 bool remove_dc_offset = false;  // Enable it if you need.
 bool add_noise = false;  // Enable it if you need.
-std::vector<bool> trigger_SC(amount_of_mic_channel,false);
+std::vector<bool> trigger_SR(amount_of_mic_channel,false);
 std::vector<float> neg_mean_vad(vad_input_shape,0.f);
 std::vector<float> inv_std_vad(vad_input_shape,0.f);
 std::vector<float> Blackman_Harris_factor_vad(fft_points_vad,0.f);
