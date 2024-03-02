@@ -139,10 +139,8 @@ public class MainActivity extends AppCompatActivity {
         answerView.setAdapter(chatAdapter);
         set_photo.setImageResource(R.drawable.psyduck);
         for (int i = 0; i < amount_of_mic_channel; i++) {
-            List<Integer> temp2 = new ArrayList<>();
-            List<float[]> temp3 = new ArrayList<>();
-            speaker_history.add(temp2);
-            feature_history.add(temp3);
+            speaker_history.add(new ArrayList<>());
+            feature_history.add(new ArrayList<>());
             print_count[i] = 0;
         }
         input_box.setText("");
