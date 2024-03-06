@@ -228,7 +228,7 @@ static inline int Compute_Features(const int n_mels, const int fft_points, const
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_example_myapplication_MainActivity_Load_1Models_10(JNIEnv *env, jobject clazz,
+Java_com_example_myapplication_MainActivity_Load_1Models_1A(JNIEnv *env, jobject clazz,
                                                             jobject asset_manager,
                                                             jboolean use_fp16,
                                                             jboolean use_gpu,
@@ -430,7 +430,7 @@ Java_com_example_myapplication_MainActivity_Load_1Models_10(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_example_myapplication_MainActivity_Load_1Models_11(JNIEnv *env, jobject clazz,
+Java_com_example_myapplication_MainActivity_Load_1Models_1B(JNIEnv *env, jobject clazz,
                                                             jobject asset_manager,
                                                             jboolean use_fp16,
                                                             jboolean use_gpu,
