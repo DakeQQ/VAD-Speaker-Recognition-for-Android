@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         AssetManager mgr = getAssets();
-        runOnUiThread(() -> Load_Models_0(mgr,false,false,false,false,false,false)); // Actually, there are no options that you can set to 'true' to achieve better performance than with ONNX Runtime itself.
-        runOnUiThread(() -> Load_Models_1(mgr,false,false,false,false,false,false)); // Therefore, we do not use an if-else statement to determine whether the loading was successful or not.
+        runOnUiThread(() -> Load_Models_A(mgr,false,false,false,false,false,false)); // Actually, there are no options that you can set to 'true' to achieve better performance than with ONNX Runtime itself.
+        runOnUiThread(() -> Load_Models_B(mgr,false,false,false,false,false,false)); // Therefore, we do not use an if-else statement to determine whether the loading was successful or not.
         runOnUiThread(() -> {
             Read_Assets(file_name_negMean_vad, mgr);
             Read_Assets(file_name_invStd_vad, mgr);
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                                 print_count[i] += 1;
                             } else {
                                 print_count[i] = print_threshold;
-                                if (speaker_history.size() > 0) {
+                                if (!speaker_history.isEmpty()) {
                                     speaker_history.get(i).clear();
                                     feature_history.get(i).clear();
                                 }
@@ -209,22 +209,22 @@ public class MainActivity extends AppCompatActivity {
                         if (print_count[k] >= print_threshold) {
                             if (continue_active[k] >= continue_threshold) {
                                 int finalK = k;
-                                runOnUiThread(() -> continue_active[finalK] = 0);
-                                for (int i = continue_threshold / 2; i > 0; i--) {
-                                    if (speaker_history.get(k).size() > i) {
-                                        speaker_history.get(k).subList(0, i).clear();
-                                        feature_history.get(k).subList(0, i).clear();
-                                        break;
-                                    }
-                                }
-                                for (int i = continue_threshold / 2; i > 0; i--) {
-                                    if (speaker_history.get(k).size() > i) {
-                                        speaker_history.get(k).subList(speaker_history.get(k).size() - i, speaker_history.get(k).size()).clear();
-                                        feature_history.get(k).subList(feature_history.get(k).size() - i, feature_history.get(k).size()).clear();
-                                        break;
-                                    }
-                                }
                                 if (amount_of_speakers > 0) {
+                                    runOnUiThread(() -> continue_active[finalK] = 0);
+                                    for (int i = continue_threshold / 2; i > 0; i--) {
+                                        if (speaker_history.get(k).size() > i) {
+                                            speaker_history.get(k).subList(0, i).clear();
+                                            feature_history.get(k).subList(0, i).clear();
+                                            break;
+                                        }
+                                    }
+                                    for (int i = continue_threshold / 2; i > 0; i--) {
+                                        if (speaker_history.get(k).size() > i) {
+                                            speaker_history.get(k).subList(speaker_history.get(k).size() - i, speaker_history.get(k).size()).clear();
+                                            feature_history.get(k).subList(feature_history.get(k).size() - i, feature_history.get(k).size()).clear();
+                                            break;
+                                        }
+                                    }
                                     int[] count = new int[score_pre_calculate_Speaker.length + 1];
                                     for (int i = 0; i < speaker_history.get(k).size(); i++) {
                                         if (speaker_history.get(k).get(i) != -1) {
@@ -712,8 +712,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private native boolean Load_Models_0(AssetManager assetManager, boolean FP16, boolean USE_GPU, boolean USE_NNAPI, boolean USE_XNNPACK, boolean USE_QNN, boolean USE_DSP_NPU);
-    private native boolean Load_Models_1(AssetManager assetManager, boolean FP16, boolean USE_GPU, boolean USE_NNAPI, boolean USE_XNNPACK, boolean USE_QNN, boolean USE_DSP_NPU);
+    private native boolean Load_Models_A(AssetManager assetManager, boolean FP16, boolean USE_GPU, boolean USE_NNAPI, boolean USE_XNNPACK, boolean USE_QNN, boolean USE_DSP_NPU);
+    private native boolean Load_Models_B(AssetManager assetManager, boolean FP16, boolean USE_GPU, boolean USE_NNAPI, boolean USE_XNNPACK, boolean USE_QNN, boolean USE_DSP_NPU);
     private native boolean Pre_Process(float[] neg_mean_vad, float[] inv_std_vad);
     private static native float[] Run_VAD_SR(int record_size_16k, float[] audio, int stop_asr);
 }
