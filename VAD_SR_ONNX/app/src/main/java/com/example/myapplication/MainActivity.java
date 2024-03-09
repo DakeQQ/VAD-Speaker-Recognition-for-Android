@@ -355,9 +355,11 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-                                if (k == amount_of_mic -1) {
-                                    runOnUiThread(() -> saveToFile(score_data_Speaker,cache_path + file_name_speakers));
-                                    runOnUiThread(() -> saveToFile(speaker_frequency,cache_path + file_name_speakers_frequency));
+                                if (k == amount_of_mic - 1) {
+                                    runOnUiThread(() -> {
+                                        saveToFile(score_data_Speaker,cache_path + file_name_speakers);
+                                        saveToFile(speaker_frequency,cache_path + file_name_speakers_frequency);
+                                    });
                                 }
                             }
                             continue_active[k] = 0;
@@ -529,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
         float model_result_dot = (float) Math.sqrt(Dot(model_result, model_result));
         float max_score = -999.f;
         int max_position = -1;
-        for (int i = 0; i < score_pre_calculate_Speaker.length; i++) {
+        for (int i = score_pre_calculate_Speaker.length - 1; i > -1; i--) {
             if (score_data_Speaker[i][0] != -999.f) {
                 float temp = Dot(score_data_Speaker[i], model_result) / (score_pre_calculate_Speaker[i] * model_result_dot);
                 if (temp > max_score) {
