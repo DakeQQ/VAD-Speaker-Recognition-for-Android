@@ -11,6 +11,7 @@
 9. The system will automatically assign a new ID to the unfamiliar voice.
 10. You can rename the ID by the specific format. For example: 0.John or 1:John or John/Handsome_John...Use a sign or whitespace to separate the previous ID and new name.
 11. The time cost of speaker recognition inference is about 25ms. VAD takes about 2ms.
+12. See more projects: https://dakeqq.github.io/overview/
 # VAD-说话人识别-安卓
 1. 在安卓设备上展示多说话人识别。
 2. 演示模型已上传到云端硬盘：https://drive.google.com/drive/folders/1p_qIVEO5ZPhHAsyxaJsHk4Ykf7cMm5PN?usp=sharing
@@ -24,5 +25,6 @@
 10. 系统将自动为陌生的声音分配一个新的ID。
 11. 您可以按照特定格式重命名ID。例如：0.John 或 1:John 或 John/Handsome_John...使用标记或空格来分隔之前的ID和新名称。
 12. 说话人识别推理的时间消耗约为25ms。VAD大约需要2ms。
+13. 看更多項目: https://dakeqq.github.io/overview/
 # 演示结果 Demo Results
 ![Demo Animation](https://github.com/DakeQQ/VAD-Speaker-Recognition-for-Android/blob/main/vad_sr.gif?raw=true)
