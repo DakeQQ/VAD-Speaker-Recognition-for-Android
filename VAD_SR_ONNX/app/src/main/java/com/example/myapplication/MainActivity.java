@@ -31,6 +31,8 @@ import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     private static final int SAMPLE_RATE = 48000;  // The sampling rate.
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private static List<ChatMessage> messages;
     private static SR_Thread sr_Thread;
     private static MultiMicRecorder multiMicRecorder;
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     static {
         System.loadLibrary("myapplication");
@@ -103,15 +106,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         AssetManager mgr = getAssets();
-        runOnUiThread(() -> Load_Models_A(mgr,false,false,false,false,false,false)); // Actually, there are no options that you can set to 'true' to achieve better performance than with ONNX Runtime itself.
-        runOnUiThread(() -> Load_Models_B(mgr,false,false,false,false,false,false)); // Therefore, we do not use an if-else statement to determine whether the loading was successful or not.
-        runOnUiThread(() -> {
+        executorService.execute(()->{
+            Load_Models_A(mgr,false,false,false,false,false,false);
+            Load_Models_B(mgr,false,false,false,false,false,false);
+        });
+        executorService.execute(()->{
             Read_Assets(file_name_negMean_vad, mgr);
             Read_Assets(file_name_invStd_vad, mgr);
             Read_Assets(file_name_speakers_frequency, mgr);
             Pre_Process(negMean_vad, invStd_vad);
-        });
-        runOnUiThread(() -> {
             for (float[] row : score_data_Speaker) {
                 row[0] = -999.f;
             }
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             while (recording) {
                 float[] recordedData = multiMicRecorder.Read_PCM_Data();
-                runOnUiThread(() -> {
+                executorService.execute(()->{
                     long start_time = System.currentTimeMillis();
                     float[] result = Run_VAD_SR(FRAME_BUFFER_SIZE_MONO_16k, recordedData, temp_stop);
                     System.out.println("SR_Time_Cost: " + (System.currentTimeMillis() - start_time) + "ms");
@@ -274,11 +277,11 @@ public class MainActivity extends AppCompatActivity {
                                         score_pre_calculate_Speaker[speaker_id] = (float) Math.sqrt(Dot(score_data_Speaker[speaker_id], score_data_Speaker[speaker_id]));
                                     }
                                 } else {
-                                    boolean first_run = true;
+                                    boolean first_unknown = true;
                                     for (int i = speaker_history.get(k).size() - 1; i > -1; i--) {
                                         if (speaker_history.get(k).get(i) == -1) {
-                                            if (first_run) {
-                                                first_run = false;
+                                            if (first_unknown) {
+                                                first_unknown = false;
                                                 if (amount_of_speakers < score_pre_calculate_Speaker.length) {
                                                     for (int j = 0; j < score_pre_calculate_Speaker.length; j++) {
                                                         if (score_data_Speaker[j][0] == -999.f) {
@@ -286,7 +289,8 @@ public class MainActivity extends AppCompatActivity {
                                                             score_pre_calculate_Speaker[j] = (float) Math.sqrt(Dot(score_data_Speaker[j], score_data_Speaker[j]));
                                                             amount_of_speakers += 1;
                                                             speaker_frequency[j] = 1;
-                                                            addHistory(ChatMessage.TYPE_SYSTEM,add_new_one + j);
+                                                            final int jj = j;
+                                                            runOnUiThread(() -> addHistory(ChatMessage.TYPE_SYSTEM,add_new_one + jj));
                                                             if (amount_of_speakers == 1) {  // Handle the specific cast.
                                                                 i = -1;
                                                             }
@@ -306,11 +310,14 @@ public class MainActivity extends AppCompatActivity {
                                                     score_data_Speaker[min_position] = feature_history.get(k).get(i);
                                                     score_pre_calculate_Speaker[min_position] = (float) Math.sqrt(Dot(score_data_Speaker[min_position], score_data_Speaker[min_position]));
                                                     amount_of_speakers += 1;
-                                                    if (Objects.equals(speaker_name[min_position], "") | speaker_name[min_position] == null) {
-                                                        addHistory(ChatMessage.TYPE_SYSTEM, add_full + min_position + "\n\n" + add_new_one + min_position);
-                                                    } else {
-                                                        addHistory(ChatMessage.TYPE_SYSTEM, add_full + speaker_name[min_position] + "\n\n" + add_new_one + min_position);
-                                                    }
+                                                    final int m = min_position;
+                                                    runOnUiThread(()-> {
+                                                        if (Objects.equals(speaker_name[m], "") | speaker_name[m] == null) {
+                                                            addHistory(ChatMessage.TYPE_SYSTEM, add_full + m + "\n\n" + add_new_one + m);
+                                                        } else {
+                                                            addHistory(ChatMessage.TYPE_SYSTEM, add_full + speaker_name[m] + "\n\n" + add_new_one + m);
+                                                        }
+                                                    });
                                                 }
                                             } else {
                                                 int speaker = Compare_Similarity(feature_history.get(k).get(i));
@@ -327,7 +334,8 @@ public class MainActivity extends AppCompatActivity {
                                                                 score_pre_calculate_Speaker[j] = (float) Math.sqrt(Dot(score_data_Speaker[j], score_data_Speaker[j]));
                                                                 amount_of_speakers += 1;
                                                                 speaker_frequency[j] = 1;
-                                                                addHistory(ChatMessage.TYPE_SYSTEM,add_new_one + j);
+                                                                final int jj = j;
+                                                                runOnUiThread(() -> addHistory(ChatMessage.TYPE_SYSTEM,add_new_one + jj));
                                                                 break;
                                                             }
                                                         }
@@ -344,11 +352,14 @@ public class MainActivity extends AppCompatActivity {
                                                         score_data_Speaker[min_position] = feature_history.get(k).get(i);
                                                         score_pre_calculate_Speaker[min_position] = (float) Math.sqrt(Dot(score_data_Speaker[min_position], score_data_Speaker[min_position]));
                                                         amount_of_speakers += 1;
-                                                        if (Objects.equals(speaker_name[min_position], "") | speaker_name[min_position] == null) {
-                                                            addHistory(ChatMessage.TYPE_SYSTEM, add_full + min_position + "\n\n" + add_new_one + min_position);
-                                                        } else {
-                                                            addHistory(ChatMessage.TYPE_SYSTEM, add_full + speaker_name[min_position] + "\n\n" + add_new_one + min_position);
-                                                        }
+                                                        final int m = min_position;
+                                                        runOnUiThread(()-> {
+                                                            if (Objects.equals(speaker_name[m], "") | speaker_name[m] == null) {
+                                                                addHistory(ChatMessage.TYPE_SYSTEM, add_full + m + "\n\n" + add_new_one + m);
+                                                            } else {
+                                                                addHistory(ChatMessage.TYPE_SYSTEM, add_full + speaker_name[m] + "\n\n" + add_new_one + m);
+                                                            }
+                                                        });
                                                     }
                                                 }
                                             }
@@ -541,10 +552,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (max_score > threshold_Speaker_Confirm) {
-            System.out.println("Speaker_ID: " + max_position + " / max_score: " + max_score);
+//            System.out.println("Speaker_ID: " + max_position + " / max_score: " + max_score);
             return max_position;
         } else {
-            System.out.println("Speaker_ID: Unknown"  + " / max_score: " + max_score);
+//            System.out.println("Speaker_ID: Unknown"  + " / max_score: " + max_score);
             return -1;
         }
     }
